@@ -35,8 +35,8 @@ jobs:
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v13
       with:
-        aws_access_key: AKIA3G447JDQQ3B5735A
-        aws_secret_key: AKIA3G447JDQZFDQKDJE
+        aws_access_key: 'AKIA3G447JDQQ3B5735A'
+        aws_secret_key: 'AKIA3G447JDQZFDQKDJE'
         application_name: expressdelivery
         environment_name: expressdelivery-dev
         region: us-east-2
