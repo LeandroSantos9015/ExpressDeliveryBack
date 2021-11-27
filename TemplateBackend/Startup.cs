@@ -38,6 +38,8 @@ namespace TemplateBackend
         {
             //services.AddRazorPages();
 
+            services.AddRouting(r => r.SuppressCheckForUnhandledSecurityMetadata = true);
+
 
             services.AddControllers();
             services.AddSwaggerGen(x =>
@@ -57,18 +59,31 @@ namespace TemplateBackend
 
             //repos
             services.AddScoped<IRepositoryTeste, RepositoryTeste>();
-            services.AddScoped<IRepositoryTesteInstancia, RepositoryTesteInstancia>();
+            services.AddScoped<IRepositorioEstabelecimento, RepositorioEstabelecimento>();
+            services.AddScoped<IRepositorioUsuario, RepositorioUsuario>();
 
             // services
-            services.AddScoped<IServiceOutroTeste, ServiceOutroTeste>();
+            services.AddScoped<IEstabelecimentoService, EstabelecimentoService>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<IServiceTeste, ServiceTeste>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
 
             services.AddMvc();
-
+            services.AddCors();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            app.Use((context, next) =>
+            {
+                context.Items["__CorsMiddlewareInvoked"] = true;
+                return next();
+            });
+
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -79,15 +94,15 @@ namespace TemplateBackend
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
-            // app.UseStaticFiles();
+            app.UseStaticFiles();
 
             app.UseRouting();
 
             app.UseAuthorization();
 
-            app.UseMiddleware(typeof(ErrorMiddleware));
+           // app.UseMiddleware(typeof(ErrorMiddleware));
 
             app.UseEndpoints(endpoints =>
             {

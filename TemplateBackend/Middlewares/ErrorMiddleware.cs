@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using TemplateBackend.ViewModels;
+//using TemplateBackend.ViewModels;
 
 namespace TemplateBackend.Middlewares
 {
@@ -24,38 +24,38 @@ namespace TemplateBackend.Middlewares
             {
                 await next(context);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                await HandleExceptionAsync(context, ex);
+               // await HandleExceptionAsync(context, ex);
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext context, Exception ex)
-        {
-            //TODO: Gravar log de erro com o trace id
+        //private Task HandleExceptionAsync(HttpContext context, Exception ex)
+        //{
+        //    //TODO: Gravar log de erro com o trace id
 
-            ErrorResponseVm errorResponseVm;
+        //    //ErrorResponseVm errorResponseVm;
 
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development" ||
-                Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Qa")
-            {
-                errorResponseVm = new ErrorResponseVm(HttpStatusCode.InternalServerError.ToString(),
-                                                      $"{ex.Message} {ex?.InnerException?.Message}");
-            }
-            else
-            {
-                //Homologação, Pre Prod, Produção...
+        //    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development" ||
+        //        Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Qa")
+        //    {
+        //      //  errorResponseVm = new ErrorResponseVm(HttpStatusCode.InternalServerError.ToString(),
+        //        //                                      $"{ex.Message} {ex?.InnerException?.Message}");
+        //    }
+        //    else
+        //    {
+        //        //Homologação, Pre Prod, Produção...
 
-                errorResponseVm = new ErrorResponseVm(HttpStatusCode.InternalServerError.ToString(),
-                                                      "An internal server error has occurred.");
-            }
+        //        //errorResponseVm = new ErrorResponseVm(HttpStatusCode.InternalServerError.ToString(),
+        //          //                                    "An internal server error has occurred.");
+        //    }
 
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        //    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-            var result = JsonConvert.SerializeObject(errorResponseVm);
-            context.Response.ContentType = "application/json";
-            return context.Response.WriteAsync(result);
-        }
+        //    var result = JsonConvert.SerializeObject(errorResponseVm);
+        //    context.Response.ContentType = "application/json";
+        //    return context.Response.WriteAsync(result);
+        //}
     }
 }
 

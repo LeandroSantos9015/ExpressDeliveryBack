@@ -6,9 +6,9 @@ using TemplateBackend.Models.Estabelecimento;
 
 namespace TemplateBackend.Repositories.Contrato
 {
-    public interface IRepositoryTeste
+    public interface IRepositorioEstabelecimento
     {
-        public IEnumerable<dynamic> Listar();
+        public IList<ModelListaEstabelecimento> ListarEstabelecimentos(int idCidade);
 
     }
 }
