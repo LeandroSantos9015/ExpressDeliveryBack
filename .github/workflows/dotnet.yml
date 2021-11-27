@@ -1,10 +1,7 @@
-name: ExpressDeliveryBackend
+name: Deploy AWS
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -13,38 +10,36 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET
+   
+    - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
-    - name: Restore dependencies
+        dotnet-version: 3.1.301
+    
+    - name: Install dependencies
       run: dotnet restore
+    
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --configuration Release --no-restore
+    
     - name: Test
-      run: dotnet test --no-build --verbosity normal
-      
+      run: dotnet test --no-restore --verbosity normal
+
     - name: Publish
       run: dotnet publish -c Release -o '${{ github.workspace }}/out'
-
+  
     - name: Zip Package
       run: |
-          cd ${{ github.workspace }}/out
-          zip -r ${{ github.workspace }}/out.zip *
-          
-    - name: Checkout source code
-      uses: actions/checkout@v2
-
-    - name: Generate deployment package
-      run: zip -r deploy.zip . -x '*.git*'
-
+        cd ${{ github.workspace }}/out 
+        zip -r ${{ github.workspace }}/out.zip *
     - name: Deploy to EB
-      uses: einaregilsson/beanstalk-deploy@v18
+      uses: einaregilsson/beanstalk-deploy@v13
       with:
         aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        application_name: MyApplicationName
-        environment_name: MyApplication-Environment
-        version_label: 12345
-        region: us-west-2
-        deployment_package: deploy.zip
+        application_name: expressdelivery
+        environment_name: expressdelivery-dev
+        region: us-east-2
+        version_label: ${{ github.run_id }}
+        version_description: ${{ github.sha }}
+        deployment_package: ${{ github.workspace }}/out.zip
