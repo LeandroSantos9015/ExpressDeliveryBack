@@ -16,7 +16,7 @@ jobs:
       with:
         dotnet-version: 3.1.301
 				
-	- name: Package
+    - name: Package
       run: |
         cd TemplateBackend
         dotnet new tool-manifest
@@ -37,7 +37,7 @@ jobs:
     - name: Test
       run: dotnet test --no-restore --verbosity normal
 	  
-	- name: Publish
+    - name: Publish
       run: dotnet publish -c Release -o '${{ github.workspace }}/out'
 	  
     - name: Upload artifact
