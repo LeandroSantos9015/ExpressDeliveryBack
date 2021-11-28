@@ -36,10 +36,10 @@ jobs:
     
     - name: Test
       run: dotnet test --no-restore --verbosity normal
-	  
+    
     - name: Publish
-      run: dotnet publish -c Release -o '${{ github.workspace }}/out'
-	  
+      run: dotnet publish -c Release -o '${{ github.workspace }}/out'	  
+    
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
